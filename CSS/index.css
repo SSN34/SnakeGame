@@ -12,25 +12,16 @@
     text-align: center;
 }
 
-.restart-button{
-    height: 300px;
-    vertical-align: middle;
-    z-index: 500;
-    position: absolute;
-    margin-top: 200px;
-    margin-left: 50px;
-}
-
-.restart-button div{
+.button{
     background-color:palegoldenrod;
+    width: 100px;
     padding: 2px 10px;
-    margin-left: 200px;
     border: 1px solid goldenrod;
-    color: darkslategray;
     text-decoration-line: none;
+    text-align: center;
 }
 
-.restart-button div a{
+.button a{
     background-color:palegoldenrod;
     color: darkslategray;
     text-decoration-line: none;

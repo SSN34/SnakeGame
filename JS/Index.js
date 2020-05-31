@@ -9,6 +9,18 @@ const centrePosition ={
     y : Math.floor(height/2) * square
 };
 const canvas = document.getElementById("game-canvas");
+const table = document.getElementById("control");
+table.setAttribute("width", gameWidth);
+var row = table.insertRow(0);
+var cell1 = row.insertCell(0);
+var cell2 = row.insertCell(1);
+cell1.setAttribute("width","50%");
+cell1.setAttribute("align","left");
+cell2.setAttribute("width","50%");
+cell2.setAttribute("align","right");
+cell1.innerHTML = "<span id=\"score\">Score:0</span>" ;
+cell2.innerHTML = "<span class=\"button\"><a href=\"index.html\"> Restart </a></span>";
+
 const score = document.getElementById("score");
 canvas.setAttribute("width", gameWidth);
 canvas.setAttribute("height", gameHeight);
@@ -29,35 +41,7 @@ function drawGrid(){
 var direction = "U";
 var intervalID = "";
 
-document.addEventListener("keyup", function(event){
-    switch(event.keyCode){
-        case 37:
-            if(direction == "D" || direction == "U"){
-                direction = "L";
-            }
-            break;
-        case 38:
-            if(direction == "L" || direction == "R"){
-                direction = "U";
-            }
-            break;
-        case 39:
-            if(direction == "D" || direction == "U"){
-                direction = "R";
-            }
-            break;
-        case 40:
-            if(direction == "L" || direction == "R"){
-                direction = "D";
-            }
-            break;
-        case 32:
-            score.style.display = "block";
-            intervalID = setInterval(draw, 200);
-            break;
-        default:
-    }
-});
+
 
 drawGrid();
 
@@ -76,7 +60,14 @@ function GetFirstSnake(){
 }
 
 var arrSnake = GetFirstSnake();
-var food ;
+var foodImage = new Image();
+foodImage.src = "./Images/ball.png";
+
+var food = {
+    image : foodImage,
+    x : Math.floor((Math.random() * gameWidth)/square) * square,
+    y : Math.floor((Math.random() * gameHeight)/square) * square
+}
 
 function initateGame(){
     ctx.fillStyle = "#f55";
@@ -110,6 +101,13 @@ function draw(){
         ctx.fillRect(arrSnake[count].x , arrSnake[count].y, square, square);
         ctx.strokeRect(arrSnake[count].x , arrSnake[count].y, square, square);
     }
+
+    ctx.drawImage(food.image, food.x + 2.5 , food.y + 2.5 , square - 5, square - 5);
+
+    checkFoodInteraction();
+
+    checkSelfCollision();
+
     checkWallCollision();
     
     updateSnakePosition();
@@ -152,6 +150,7 @@ function updateSnakePosition(){
 }
 
 function gameOver(){
+    clearInterval(intervalID);
 
     ctx.globalAlpha = "0.5";
     ctx.fillStyle = "#fff";
@@ -161,15 +160,69 @@ function gameOver(){
     ctx.font = "30px Courier New";
     ctx.fillStyle = "#f00";
     ctx.textAlign = "center";
-    ctx.fillText("Game Over", gameWidth/2, gameHeight/2);
+    var scoreText= score.innerText;  
+    ctx.fillText(scoreText + "\n GAME OVER", gameWidth/2, gameHeight/2);
 }
 
 function checkWallCollision(){
     if(arrSnake[0].x < 0 || arrSnake[0].x > (gameWidth - square) || arrSnake[0].y < 0 || arrSnake[0].y > (gameHeight - square)){
-        clearInterval(intervalID);
         gameOver();
     }
 }
 
+function checkFoodInteraction(){
+    if(arrSnake[0].x == food.x && arrSnake[0].y == food.y){
+        var tailPosition = {
+            x: arrSnake[arrSnake.length - 1].x,
+            y: arrSnake[arrSnake.length - 1].y
+        }
 
+        arrSnake.push(tailPosition);
 
+        food.x = Math.floor((Math.random() * gameWidth)/square) * square;
+        food.y = Math.floor((Math.random() * gameHeight)/square) * square;
+
+        var scoreNumber = parseInt(score.innerText.split(':')[1]);
+        scoreNumber = scoreNumber + 1;
+
+        score.innerText = "Score:" + scoreNumber;
+    }
+}
+
+function checkSelfCollision(){
+    for(var i = 1; i < arrSnake.length; i++){
+        if(arrSnake[0].x == arrSnake[i].x && arrSnake[0].y == arrSnake[i].y){
+            gameOver();
+        }
+    }
+}
+
+document.addEventListener("keyup", function(event){
+    switch(event.keyCode){
+        case 37:
+            if(direction == "D" || direction == "U"){
+                direction = "L";
+            }
+            break;
+        case 38:
+            if(direction == "L" || direction == "R"){
+                direction = "U";
+            }
+            break;
+        case 39:
+            if(direction == "D" || direction == "U"){
+                direction = "R";
+            }
+            break;
+        case 40:
+            if(direction == "L" || direction == "R"){
+                direction = "D";
+            }
+            break;
+        case 32:
+            score.style.display = "block";
+            intervalID = setInterval(draw, 200);
+            break;
+        default:
+    }
+});
