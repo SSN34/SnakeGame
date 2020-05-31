@@ -42,3 +42,8 @@
     font-family: 'Courier New', Courier, monospace;
     font-size: 16px;
 }
+
+#salutation{
+    font-size: 10px;
+    color: darkgray;
+}

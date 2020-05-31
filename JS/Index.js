@@ -171,9 +171,5 @@ function checkWallCollision(){
     }
 }
 
-function checkFood(){
-    if()
 
-
-}
 
