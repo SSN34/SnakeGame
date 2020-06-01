@@ -46,7 +46,7 @@ var arrSnake = GetFirstSnake();
 var foodImage = new Image();
 foodImage.src = "./Images/ball.png";
 
-function messageBox(fillText, fillStyle){
+function messageBox(fillText, fillStyle, secondaryText = "", secondaryTextFillStyle = "#000"){
     ctx.fillStyle = "#fff";
     ctx.globalAlpha = "0.5";
     ctx.fillRect(0, gameHeight/3, gameWidth, gameHeight/3);
@@ -56,6 +56,8 @@ function messageBox(fillText, fillStyle){
     ctx.fillStyle = fillStyle;
     ctx.textAlign = "center";
     ctx.fillText(fillText, gameWidth/2, gameHeight/2);
+    ctx.fillStyle = secondaryTextFillStyle;
+    ctx.fillText(secondaryText, gameWidth/2, gameHeight/2 + 30);
 }
 
 var food = {
@@ -67,7 +69,7 @@ var food = {
 function initateGame(){
     drawGrid();
     drawSnake();
-    messageBox("Press \'SPACEBAR\' to START", "#000");
+    messageBox("Press \'SPACEBAR\' to START", "#000", "Use Arrow Keys to PLAY!");
 }
 
 initateGame();
@@ -120,9 +122,7 @@ function gameOver(){
     dead.play();
 
     var scoreText= score.innerText;  
-    messageBox(scoreText + " GAME OVER", "#f00");
-    ctx.fillStyle = "#000";
-    ctx.fillText("Press \'ENTER\' to RESTART", gameWidth/2, gameHeight/2 + 30);
+    messageBox(scoreText + " GAME OVER", "#f00", "Press \'ENTER\' to RESTART");
 }
 
 function checkWallCollision(){
@@ -149,10 +149,12 @@ function checkFoodInteraction(){
             }
             for(i=0; i<arrSnake.length; i++){
                 if(arrSnake[i].x == positionFood.x && arrSnake[i].y == positionFood.y){
-                    foodonSnake = true;
+                    var foodOverSnake = true;
                 }
             }
-            foodonSnake = false;
+            if(!foodOverSnake){
+                foodonSnake = false;
+            }
         }
         food.x = positionFood.x;
         food.y = positionFood.y;
