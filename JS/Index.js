@@ -141,19 +141,20 @@ function checkFoodInteraction(){
         arrSnake.push(tailPosition);
 
         positionFood = {x: 0, y: 0}
-        var foodonSnake = true;
-        while(foodonSnake){
+        while(1){
             positionFood = {
                 x: Math.floor((Math.random() * gameWidth)/square) * square,
                 y: Math.floor((Math.random() * gameHeight)/square) * square
             }
+            var foodOverSnake = false;
             for(i=0; i<arrSnake.length; i++){
                 if(arrSnake[i].x == positionFood.x && arrSnake[i].y == positionFood.y){
                     var foodOverSnake = true;
+                    break;
                 }
             }
             if(!foodOverSnake){
-                foodonSnake = false;
+                break;
             }
         }
         food.x = positionFood.x;
