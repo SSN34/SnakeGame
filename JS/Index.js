@@ -132,7 +132,9 @@ function gameOver(){
     dead.play();
 
     var scoreText= score.innerText;  
-    messageBox(scoreText + "\n GAME OVER", "#f00");
+    messageBox(scoreText + " GAME OVER", "#f00");
+    ctx.fillStyle = "#000";
+    ctx.fillText("Press \'ENTER\' to RESTART", gameWidth/2, gameHeight/2 + 30);
 }
 
 function checkWallCollision(){
@@ -188,6 +190,8 @@ document.addEventListener("keyup", function(event){
         case 32:
             intervalID = setInterval(draw, 200);
             break;
+        case 13:
+            location.reload();
         default:
     }
 });
