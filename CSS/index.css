@@ -28,7 +28,7 @@
 }
 
 #score{
-    display: none;
+    display: block;
     color: crimson;
     font-family: 'Courier New', Courier, monospace;
     font-size: 16px;

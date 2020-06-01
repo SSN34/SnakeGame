@@ -4,6 +4,12 @@ const height = 20;
 const gameWidth = square * width;
 const gameHeight = square * height;
 
+const dead = new Audio();
+dead.src = "./Audio/dead.wav";
+
+const eat = new Audio();
+eat.src = "./Audio/eat.wav";
+
 const centrePosition ={
     x : Math.floor(width/2) * square,
     y : Math.floor(height/2) * square
@@ -47,6 +53,18 @@ var arrSnake = GetFirstSnake();
 var foodImage = new Image();
 foodImage.src = "./Images/ball.png";
 
+function messageBox(fillText, fillStyle){
+    ctx.fillStyle = "#fff";
+    ctx.globalAlpha = "0.5";
+    ctx.fillRect(0, gameHeight/3, gameWidth, gameHeight/3);
+    ctx.globalAlpha = "1.0";
+    
+    ctx.font = "30px Courier New";
+    ctx.fillStyle = fillStyle;
+    ctx.textAlign = "center";
+    ctx.fillText(fillText, gameWidth/2, gameHeight/2);
+}
+
 var food = {
     image : foodImage,
     x : Math.floor((Math.random() * gameWidth)/square) * square,
@@ -63,15 +81,7 @@ function initateGame(){
         ctx.strokeRect(arrSnake[i].x , arrSnake[i].y, square, square);
     }
     
-    ctx.fillStyle = "#fff";
-    ctx.globalAlpha = "0.5";
-    ctx.fillRect(0, gameHeight/3, gameWidth, gameHeight/3);
-    ctx.globalAlpha = "1.0";
-    
-    ctx.font = "30px Courier New";
-    ctx.fillStyle = "#000";
-    ctx.textAlign = "center";
-    ctx.fillText("Press \'SpaceBar\' to START", gameWidth/2, gameHeight/2);
+    messageBox("Press \'SPACEBAR\' to START", "#000");
 }
 
 initateGame();
@@ -91,11 +101,8 @@ function draw(){
     ctx.drawImage(food.image, food.x + 2.5 , food.y + 2.5 , square - 5, square - 5);
 
     checkFoodInteraction();
-
     checkSelfCollision();
-
     checkWallCollision();
-    
     updateSnakePosition();
 }
 
@@ -107,21 +114,10 @@ function updateSnakePosition(){
         y : 0
     };
 
-    switch(direction){
-        case 'U':
-            movementDirection.y = -square;
-            break;
-        case 'D':
-            movementDirection.y = square;
-            break;
-        case 'L':
-            movementDirection.x = -square;
-            break;
-        case 'R':
-            movementDirection.x = square;
-            break;
-        default:
-    }
+    if(direction==='U')movementDirection.y = -square;
+    if(direction==='D')movementDirection.y = square;
+    if(direction==='L')movementDirection.x = -square;
+    if(direction==='R')movementDirection.x = square;
 
     var newposition = {
         x: arrSnake[0].x + movementDirection.x,
@@ -133,17 +129,10 @@ function updateSnakePosition(){
 
 function gameOver(){
     clearInterval(intervalID);
+    dead.play();
 
-    ctx.globalAlpha = "0.5";
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0,0,gameWidth,gameHeight);
-    ctx.globalAlpha = "1.0";
-
-    ctx.font = "30px Courier New";
-    ctx.fillStyle = "#f00";
-    ctx.textAlign = "center";
     var scoreText= score.innerText;  
-    ctx.fillText(scoreText + "\n GAME OVER", gameWidth/2, gameHeight/2);
+    messageBox(scoreText + "\n GAME OVER", "#f00");
 }
 
 function checkWallCollision(){
@@ -167,6 +156,8 @@ function checkFoodInteraction(){
         var scoreNumber = parseInt(score.innerText.split(':')[1]);
         scoreNumber = scoreNumber + 1;
 
+        eat.play();
+
         score.innerText = "Score:" + scoreNumber;
     }
 }
@@ -175,6 +166,7 @@ function checkSelfCollision(){
     for(var i = 1; i < arrSnake.length; i++){
         if(arrSnake[0].x == arrSnake[i].x && arrSnake[0].y == arrSnake[i].y){
             gameOver();
+            break;
         }
     }
 }
@@ -182,27 +174,18 @@ function checkSelfCollision(){
 document.addEventListener("keyup", function(event){
     switch(event.keyCode){
         case 37:
-            if(direction == "D" || direction == "U"){
-                direction = "L";
-            }
+            if(direction == "D" || direction == "U") direction = "L";
             break;
         case 38:
-            if(direction == "L" || direction == "R"){
-                direction = "U";
-            }
+            if(direction == "L" || direction == "R") direction = "U";
             break;
         case 39:
-            if(direction == "D" || direction == "U"){
-                direction = "R";
-            }
+            if(direction == "D" || direction == "U") direction = "R";
             break;
         case 40:
-            if(direction == "L" || direction == "R"){
-                direction = "D";
-            }
+            if(direction == "L" || direction == "R") direction = "D";
             break;
         case 32:
-            score.style.display = "block";
             intervalID = setInterval(draw, 200);
             break;
         default:
