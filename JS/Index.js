@@ -9,24 +9,12 @@ const centrePosition ={
     y : Math.floor(height/2) * square
 };
 const canvas = document.getElementById("game-canvas");
-const table = document.getElementById("control");
-table.setAttribute("width", gameWidth);
-var row = table.insertRow(0);
-var cell1 = row.insertCell(0);
-var cell2 = row.insertCell(1);
-cell1.setAttribute("width","50%");
-cell1.setAttribute("align","left");
-cell2.setAttribute("width","50%");
-cell2.setAttribute("align","right");
-cell1.innerHTML = "<span id=\"score\">Score:0</span>" ;
-cell2.innerHTML = "<span class=\"button\"><a href=\"index.html\"> Restart </a></span>";
 
 const score = document.getElementById("score");
 canvas.setAttribute("width", gameWidth);
 canvas.setAttribute("height", gameHeight);
 
 const ctx = canvas.getContext('2d');
-
 
 function drawGrid(){
     ctx.strokeStyle = "#cdcdcd";
@@ -40,10 +28,6 @@ function drawGrid(){
 
 var direction = "U";
 var intervalID = "";
-
-
-
-drawGrid();
 
 function GetFirstSnake(){
     var arr = [];
@@ -70,12 +54,14 @@ var food = {
 }
 
 function initateGame(){
+    drawGrid();
+
     ctx.fillStyle = "#f55";
     ctx.strokeStyle = "#2ab"
-    ctx.fillRect(arrSnake[0].x , arrSnake[0].y, square, square);
-    ctx.strokeRect(arrSnake[0].x , arrSnake[0].y, square, square);
-    ctx.fillRect(arrSnake[1].x , arrSnake[1].y, square, square);
-    ctx.strokeRect(arrSnake[1].x , arrSnake[1].y, square, square);
+    for(var i = 0; i < arrSnake.length; i++){
+        ctx.fillRect(arrSnake[i].x , arrSnake[i].y, square, square);
+        ctx.strokeRect(arrSnake[i].x , arrSnake[i].y, square, square);
+    }
     
     ctx.fillStyle = "#fff";
     ctx.globalAlpha = "0.5";
@@ -123,20 +109,16 @@ function updateSnakePosition(){
 
     switch(direction){
         case 'U':
-            movementDirection.x = 0;
             movementDirection.y = -square;
             break;
         case 'D':
-            movementDirection.x = 0;
             movementDirection.y = square;
             break;
         case 'L':
             movementDirection.x = -square;
-            movementDirection.y = 0;
             break;
         case 'R':
             movementDirection.x = square;
-            movementDirection.y = 0;
             break;
         default:
     }
