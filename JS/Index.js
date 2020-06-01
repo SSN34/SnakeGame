@@ -193,7 +193,7 @@ document.addEventListener("keyup", function(event){
             if(direction == "L" || direction == "R") direction = "D";
             break;
         case 32:
-            if(intervalID != ""){
+            if(intervalID === ""){
                 intervalID = setInterval(draw, 200);
             }
             break;
