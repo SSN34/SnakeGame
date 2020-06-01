@@ -10,10 +10,6 @@ dead.src = "./Audio/dead.wav";
 const eat = new Audio();
 eat.src = "./Audio/eat.wav";
 
-const centrePosition ={
-    x : Math.floor(width/2) * square,
-    y : Math.floor(height/2) * square
-};
 const canvas = document.getElementById("game-canvas");
 
 const score = document.getElementById("score");
@@ -37,13 +33,10 @@ var intervalID = "";
 
 function GetFirstSnake(){
     var arr = [];
-    var position = centrePosition;
+    var position = { x : Math.floor(width/2) * square, y : Math.floor(height/2) * square };
     arr.push(position);
 
-    var nextPosition = {
-        x: centrePosition.x,
-        y: centrePosition.y + square
-    };
+    var nextPosition = { x: arr[0].x, y: arr[0].y + square };
     arr.push(nextPosition);
 
     return arr;
@@ -67,36 +60,37 @@ function messageBox(fillText, fillStyle){
 
 var food = {
     image : foodImage,
-    x : Math.floor((Math.random() * gameWidth)/square) * square,
+    x : Math.floor((Math.random() * 10)/square) * square,
     y : Math.floor((Math.random() * gameHeight)/square) * square
 }
 
 function initateGame(){
     drawGrid();
-
-    ctx.fillStyle = "#f55";
-    ctx.strokeStyle = "#2ab"
-    for(var i = 0; i < arrSnake.length; i++){
-        ctx.fillRect(arrSnake[i].x , arrSnake[i].y, square, square);
-        ctx.strokeRect(arrSnake[i].x , arrSnake[i].y, square, square);
-    }
-    
+    drawSnake();
     messageBox("Press \'SPACEBAR\' to START", "#000");
 }
 
 initateGame();
 
+function drawSnake(){
+    ctx.fillStyle = "#FFC432";
+    ctx.strokeStyle = "#2ab";
+    ctx.fillRect(arrSnake[0].x , arrSnake[0].y, square, square);
+    ctx.strokeRect(arrSnake[0].x , arrSnake[0].y, square, square);
+
+    ctx.fillStyle = "#f55";
+    ctx.strokeStyle = "#2ab";
+    for(var i = 1; i < arrSnake.length; i++){
+        ctx.fillRect(arrSnake[i].x , arrSnake[i].y, square, square);
+        ctx.strokeRect(arrSnake[i].x , arrSnake[i].y, square, square);
+    }
+}
+
 function draw(){
     ctx.clearRect(0,0,gameWidth, gameHeight);
 
     drawGrid();
-
-    ctx.fillStyle = "#f55";
-    ctx.strokeStyle = "#2ab"
-    for(var count = 0; count < arrSnake.length; count++){
-        ctx.fillRect(arrSnake[count].x , arrSnake[count].y, square, square);
-        ctx.strokeRect(arrSnake[count].x , arrSnake[count].y, square, square);
-    }
+    drawSnake();
 
     ctx.drawImage(food.image, food.x + 2.5 , food.y + 2.5 , square - 5, square - 5);
 
@@ -109,20 +103,14 @@ function draw(){
 function updateSnakePosition(){
     var head = arrSnake.pop();
 
-    movementDirection = {
-        x : 0,
-        y : 0
-    };
+    movementDirection = { x : 0, y : 0 };
 
     if(direction==='U')movementDirection.y = -square;
     if(direction==='D')movementDirection.y = square;
     if(direction==='L')movementDirection.x = -square;
     if(direction==='R')movementDirection.x = square;
 
-    var newposition = {
-        x: arrSnake[0].x + movementDirection.x,
-        y: arrSnake[0].y + movementDirection.y,
-    }
+    var newposition = { x: arrSnake[0].x + movementDirection.x, y: arrSnake[0].y + movementDirection.y }
     
     arrSnake.unshift(newposition);
 }
@@ -152,8 +140,22 @@ function checkFoodInteraction(){
 
         arrSnake.push(tailPosition);
 
-        food.x = Math.floor((Math.random() * gameWidth)/square) * square;
-        food.y = Math.floor((Math.random() * gameHeight)/square) * square;
+        positionFood = {x: 0, y: 0}
+        var foodonSnake = true;
+        while(foodonSnake){
+            positionFood = {
+                x: Math.floor((Math.random() * gameWidth)/square) * square,
+                y: Math.floor((Math.random() * gameHeight)/square) * square
+            }
+            for(i=0; i<arrSnake.length; i++){
+                if(arrSnake[i].x == positionFood.x && arrSnake[i].y == positionFood.y){
+                    foodonSnake = true;
+                }
+            }
+            foodonSnake = false;
+        }
+        food.x = positionFood.x;
+        food.y = positionFood.y;
 
         var scoreNumber = parseInt(score.innerText.split(':')[1]);
         scoreNumber = scoreNumber + 1;
