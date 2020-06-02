@@ -18,6 +18,8 @@ canvas.setAttribute("height", gameHeight);
 
 const ctx = canvas.getContext('2d');
 
+var alphaForGrid = "0.0";
+
 function drawGrid(){
     ctx.strokeStyle = "#cdcdcd";
 
@@ -26,10 +28,16 @@ function drawGrid(){
             ctx.strokeRect(i * square, j* square, square, square);
         }
     }
+
+    ctx.fillStyle = "#fff";
+    ctx.globalAlpha = alphaForGrid;
+    ctx.fillRect(0,0,gameWidth,gameHeight);
+    ctx.globalAlpha = "1.0";
 }
 
 var direction = "U";
 var intervalID = "";
+var scoreValue = 0;
 
 function GetFirstSnake(){
     var arr = [];
@@ -88,8 +96,17 @@ function drawSnake(){
     }
 }
 
+var levelCount = 0;
+
 function draw(){
     ctx.clearRect(0,0,gameWidth, gameHeight);
+
+    var levelCheck = Math.floor(scoreValue/5);
+    if(levelCheck > levelCount){
+        alphaForGrid = (parseFloat(alphaForGrid) + 0.1).toString();
+        levelCount = levelCount + 1;
+        console.log(alphaForGrid);
+    }
 
     drawGrid();
     drawSnake();
@@ -162,6 +179,8 @@ function checkFoodInteraction(){
 
         var scoreNumber = parseInt(score.innerText.split(':')[1]);
         scoreNumber = scoreNumber + 1;
+
+        scoreValue = scoreNumber;
 
         eat.play();
 

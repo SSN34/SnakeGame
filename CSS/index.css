@@ -8,6 +8,10 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
+#game-canvas{
+    border: 1px solid firebrick;
+}
+
 .game-container{
     text-align: center;
 }
@@ -19,10 +23,14 @@
     border: 1px solid goldenrod;
     text-decoration-line: none;
     text-align: center;
+    cursor: pointer;
+}
+
+.button:hover{
+    background-color: antiquewhite;
 }
 
 .button a{
-    background-color:palegoldenrod;
     color: darkslategray;
     text-decoration-line: none;
 }
