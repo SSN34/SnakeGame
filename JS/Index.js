@@ -13,12 +13,14 @@ eat.src = "./Audio/eat.wav";
 const canvas = document.getElementById("game-canvas");
 
 const score = document.getElementById("score");
+const level = document.getElementById("level");
 canvas.setAttribute("width", gameWidth);
 canvas.setAttribute("height", gameHeight);
 
 const ctx = canvas.getContext('2d');
 
 var alphaForGrid = "0.0";
+var timeInterval = 200;
 
 function drawGrid(){
     ctx.strokeStyle = "#cdcdcd";
@@ -105,7 +107,14 @@ function draw(){
     if(levelCheck > levelCount){
         alphaForGrid = (parseFloat(alphaForGrid) + 0.1).toString();
         levelCount = levelCount + 1;
-        console.log(alphaForGrid);
+        level.innerText = levelCount;
+        if(levelCount > 7){
+            if(timeInterval > 50){
+                clearInterval(intervalID);
+                timeInterval = timeInterval - 10;
+                intervalID = setInterval(draw, timeInterval);
+            }
+        }
     }
 
     drawGrid();
@@ -213,7 +222,7 @@ document.addEventListener("keyup", function(event){
             break;
         case 32:
             if(intervalID === ""){
-                intervalID = setInterval(draw, 200);
+                intervalID = setInterval(draw, timeInterval);
             }
             break;
         case 13:
