@@ -206,7 +206,7 @@ function checkSelfCollision(){
     }
 }
 
-document.addEventListener("keyup", function(event){
+document.addEventListener("keydown", function(event){
     switch(event.keyCode){
         case 37:
             if(direction == "D" || direction == "U") direction = "L";
