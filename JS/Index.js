@@ -72,7 +72,7 @@ function messageBox(fillText, fillStyle, secondaryText = "", secondaryTextFillSt
 
 var food = {
     image : foodImage,
-    x : Math.floor((Math.random() * 10)/square) * square,
+    x : Math.floor((Math.random() * gameWidth/2)/square) * square,
     y : Math.floor((Math.random() * gameHeight)/square) * square
 }
 
